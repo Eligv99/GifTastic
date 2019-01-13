@@ -1,51 +1,14 @@
 $(document).ready(function() {
 
-    var list =["Bunny", "Happy"]; 
+    var list = []; 
 
-    console.log(list)
-    
-    var userInput = "Mario";
-
-    // Ajax method to use out giphy API    
-    var queryURL = "http://api.giphy.com/v1/gifs/search?q="+ userInput +"&api_key=dc6zaTOxFJmzC&limit=10";
-
-    console.log(queryURL);
-
-    $.ajax({
-    url: queryURL,
-    method: "GET"
-
-    }).then(function(response) {
-
-        debugResponse = response;
-
-        console.log(response);
-
-        console.log(response.data.length);
-
-        // for(i = 0; i > response.data.length; i++){
-
-            // console.log(i);
-
-            $("#giphy").push("<p>Rating: " + response.data[1].rating+"<p/>");
-            
-            $("#giphy").append("<img src='" + response.data[1].images.fixed_height_small.url + "'>");
-
-            $("#giphy").push("<p>Rating: " + response.data[2].rating+"<p/> <br>");
-            
-            $("#giphy").append("<img src='" + response.data[2].images.fixed_height_small.url + "'>");
-
-            // console.log(response.data[0].images.downsized.url);
-        // }
-
-
-    });
 
     function updateHTML(){
 
         $("#buttons").empty();
-        
-        
+
+
+
         for (var i = 0; i < list.length; i++) {
             
             var a = $("<button>");
@@ -57,68 +20,107 @@ $(document).ready(function() {
             // Providing the button's text with a value of the movie at index i
             a.text(list[i]);
             // Adding the button to the HTML
-            $("#buttons").append(a);
+            $("#buttons").prepend(a);
         }
     }
+    
+    updateHTML();
 
-    $("#add-search").on("click", function(event) {
+    $("#add-movie").on("click", function(event, input) {
+        
+        var input = document.getElementById("giphy-input").value;
 
         event.preventDefault();
-        
-        var input = $("#inputSearchTerm").val();
-
-        updateHTML();
-
 
         
+        console.log("This is the search term: " + input);
+
+        list.push(input);
+
+        console.log("this is upated list " + list);
+
+        
+        
+        // var input = document.getElementById("inputSearchTerm").text();
+
+        // // var input = $("#inputSearchTerm").val();
+
+        // list.push(input);
+
+        updateHTML()
+
+    });
+
+    $("#buttons").on("click", ".gif", function() {
+
+        $("#giphy").empty();
+        
+        var btn = $(this).attr("data-name");
+
+        // alert(btn)
+
+        console.log(btn);
+        
+        // Ajax method to use out giphy API    
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q="+ btn +"&api_key=dc6zaTOxFJmzC&limit=15";
+
+        $.ajax({
+        url: queryURL,
+        method: "GET"
+    
+        }).then(function(response) {
+    
+            debugResponse = response;
+    
+            console.log(response);
+    
+            var lenght = response.data.length;
+    
+            console.log(lenght);
+    
+            for(i = 0; i < lenght; i++){
+    
+                console.log(i);
+
+                var Rating = response.data[i].rating;
+
+                $("#giphy").append("<div id='Gifo'><p>Rated: " + Rating.toUpperCase() + "<p/>" + 
+                
+                "<img class='gif' src='" + response.data[i].images.fixed_width_still.url + 
+
+                "' data-still='" +  response.data[i].images.fixed_width_still.url +
+                
+                "' data-animate='" + response.data[i].images.fixed_width.url +
+                
+                "'data-state='still'" + "></div>");
+                
+            }
+            
+        });
+
+
+    }); 
+    
+
+    $(this).on("click", ".gif", function()  {
+
+       
+
+        // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+        var state = $(this).attr("data-state");
+
+        console.log(state);
+
+        // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+        // Then, set the image's data-state to animate
+        // Else set src to the data-still value
+        if (state === "still") {
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
+        } else {
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
+        }
     });
 
 });
-
-// function createButtonsFromArray() {
-//     $("#otherButtonsHere").empty();
-//     buttonArray.forEach(function(item) {
-//       createGifButton(item);
-//     });
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-// var input = ($("#bar").val() === undefined) ? " " : $("#bar").val();
-
-
-// // var input = "testing";
-
-// console.log(input)
-
-// // Ajax method to use out giphy API    
-// var queryURL = "https://api.giphy.com/v1/gifs/search?&q=" + input + "&api_key=dc6zaTOxFJmzC&limit=10";
-
-// console.log(queryURL);
-
-// $.ajax({
-// url: queryURL,
-// method: "GET"
-
-// }).then(function(response) {
-
-//     debugResponse = response;
-//     console.log(response);
-
-//     for(i = 0; i < response.data.lenght; i++){
-
-//         $("#giphy").append("<p>Rating: " + response.data[i].rating+"<p/>");
-        
-//         $("#giphy").append("<img src='" + response.data[i].images.downsized.url + "'>");
-
-//         console.log(response.data[i])
-//     
