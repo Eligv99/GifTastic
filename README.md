@@ -2,9 +2,7 @@
 
 Simple search engine that pulls data from the Giphy API
 
-# Demo 
-
-Try it right [here](https://eligv99.github.io/GifTastic/)
+## Try it right [here](https://eligv99.github.io/GifTastic/)
 
 # Using
 
